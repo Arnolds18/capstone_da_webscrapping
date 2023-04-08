@@ -27,7 +27,7 @@ This project also expects output in the form of a flask dashboard from the dataf
 
 The code is similiar to scrapping the web. But the difference is, 
 
-```
+```python
 @app.route("/")
 def index(): 
 	
@@ -50,3 +50,9 @@ def index():
 		)
 ```   
 there is another insight that I made which is the average value from Exchange Rate data.
+
+Here is the result of my Flask Dashboard
+
+<p align="center">
+  <img src="./img/flask-dashboard.png"/>
+</p>

@@ -12,39 +12,47 @@ matplotlib.use('Agg')
 app = Flask(__name__) #do not change this
 
 #insert the scrapping here
-url_get = requests.get('____')
+url_get = requests.get('https://www.exchange-rates.org/history/IDR/USD/T')
 soup = BeautifulSoup(url_get.content,"html.parser")
 
 #find your right key here
-____ = soup.find('___')
-___ = ____.find_all('___')
+table = soup.find('table', attrs = {'class':'history-rates-data'})
+row = table.find_all('a', attrs = {'class': 'n'})
 
-row_length = len(___)
+row_length = len(row)
 
 temp = [] #initiating a list 
 
 for i in range(1, row_length):
 #insert the scrapping process here
+    #get date
+    date = table.find_all('a', attrs = {'class': 'n'})[i].text
     
-    temp.append((____,____,____)) 
+    #get exchange rate and drop the unused string
+    value = table.find_all('span', attrs = {'class':'n'})[i].text
+    value = value.replace('$1 = Rp', '').replace(',', '').strip()
+    
+    temp.append((date, value))
 
 temp = temp[::-1]
 
 #change into dataframe
-data = pd.DataFrame(____, columns = ('____','_____','_____'))
+df = pd.DataFrame(temp, columns = ('Date', 'Exchange Rate'))
 
 #insert data wrangling here
-
+df['Date'] = df['Date'].astype('datetime64')
+df['Exchange Rate'] = df['Exchange Rate'].astype('int64')
+df = df.set_index('Date')
 
 #end of data wranggling 
 
 @app.route("/")
 def index(): 
 	
-	card_data = f'{data["____"].mean().round(2)}' #be careful with the " and ' 
+	card_data = f'{df["Exchange Rate"].mean().round(2)}' #be careful with the " and ' 
 
 	# generate plot
-	ax = ____.plot(figsize = (20,9)) 
+	ax = df.plot(figsize = (20,9)) 
 	
 	# Rendering plot
 	# Do not change this
